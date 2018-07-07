@@ -4,6 +4,10 @@ apply plugin: 'kotlin-android'
 
 apply plugin: 'kotlin-android-extensions'
 
+def envFile = rootProject.file("env_vars.properties")
+def envVars = new Properties()
+envVars.load(new FileInputStream(envFile))
+
 android {
     compileSdkVersion 27
     defaultConfig {
@@ -14,11 +18,23 @@ android {
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
+
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+    }
+
+    buildTypes.each {
+        it.buildConfigField('String', 'GITHUB_V3_API', envVars['GITHUB_V3_API'])
+        it.buildConfigField('String', 'GITHUB_CLIENT_ID', envVars['GITHUB_CLIENT_ID'])
+        it.buildConfigField('String', 'GITHUB_CLIENT_SECRET', envVars['GITHUB_CLIENT_SECRET'])
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 }
 
@@ -27,6 +43,16 @@ dependencies {
     implementation"org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'com.android.support:appcompat-v7:27.1.1'
     implementation 'com.android.support.constraint:constraint-layout:1.1.2'
+
+    // async
+    implementation 'io.reactivex.rxjava2:rxjava:2.1.9'
+
+    // network
+    implementation 'com.squareup.retrofit2:retrofit:2.3.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.3.0'
+    implementation 'com.squareup.retrofit2:adapter-rxjava2:2.3.0'
+
+    // testing
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'

@@ -9,3 +9,4 @@
 /captures
 .externalNativeBuild
 .idea/**
+env_vars.properties
