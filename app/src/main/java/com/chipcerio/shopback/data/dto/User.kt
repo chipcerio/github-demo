@@ -1,6 +1,6 @@
 package com.chipcerio.shopback.data.dto
 
-data class User (
+data class User(
     val login: String,
     val id: Int,
     val node_id: String,
