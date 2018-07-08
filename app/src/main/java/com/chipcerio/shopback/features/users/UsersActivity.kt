@@ -53,11 +53,15 @@ class UsersActivity : AppCompatActivity(), UsersAdapter.OnUserSelectedListener {
         disposables.add(
             paginate.observeOn(Schedulers.io())
                 .concatMap {
-                    viewModel.getUsers("")
+                    viewModel.getUsers(it)
                 }
                 .observeOn(AndroidSchedulers.mainThread())
+                .doOnNext {
+                    Log.d(TAG, "next: ${it.next}")
+                    pageUrl = it.next
+                }
                 .subscribe({
-                    setGithubUsers(it)
+                    setGithubUsers(it.users)
                 }, {
                     Log.e(TAG, "Error:", it)
                 })

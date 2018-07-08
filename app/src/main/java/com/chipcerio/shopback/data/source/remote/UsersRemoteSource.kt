@@ -1,10 +1,9 @@
 package com.chipcerio.shopback.data.source.remote
 
-import android.util.Log
 import com.chipcerio.shopback.api.ApiService
 import com.chipcerio.shopback.api.GitHubResponse
 import com.chipcerio.shopback.api.PageLinks
-import com.chipcerio.shopback.data.dto.User
+import com.chipcerio.shopback.api.PageResponse
 import com.chipcerio.shopback.data.source.UsersSource
 import io.reactivex.Observable
 
@@ -14,31 +13,22 @@ class UsersRemoteSource(private val api: ApiService) : UsersSource {
         const val TAG = "UsersRemoteSource"
     }
 
-    override fun getUsers(pageUrl: String): Observable<List<User>> {
+    override fun getUsers(pageUrl: String): Observable<PageResponse> {
         val page = if (pageUrl.isNotEmpty()) {
             pageUrl
         } else {
             "https://api.github.com/users?per_page=20&since=0"
         }
 
-        return Observable.create<List<User>> {
+        return Observable.create<PageResponse> {
             val res = api.getUsersSync(page).execute()
             if (res.isSuccessful) {
                 res.body()?.let { users ->
-                    it.onNext(users)
+                    val githubResponse = GitHubResponse(res, res.body())
+                    val pageLinks = PageLinks(githubResponse)
+                    val pageResponse = PageResponse(pageLinks.next, users)
+                    it.onNext(pageResponse)
                 }
-
-                res.headers().names().forEach {
-                    Log.d(TAG, "names: $it")
-                }
-
-                val githubResponse = GitHubResponse(res, res.body())
-                val headerVal = githubResponse.getHeader("Link")
-                Log.d(TAG, "link: $headerVal")
-
-                val pageLinks = PageLinks(githubResponse)
-                Log.d(TAG, "next: ${pageLinks.next}")
-
             } else it.onError(Throwable("Error"))
         }
     }
