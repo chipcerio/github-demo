@@ -45,6 +45,13 @@ class UsersAdapter(
             containerView.setOnClickListener {
                 onUserSelectedListener.onUserSelected(user)
             }
+
+            if (user.site_admin) {
+                staff.visibility = View.VISIBLE
+            } else {
+                staff.visibility = View.GONE
+            }
+
             if (position == 0) {
                 sectionView.visibility = View.VISIBLE
             } else {

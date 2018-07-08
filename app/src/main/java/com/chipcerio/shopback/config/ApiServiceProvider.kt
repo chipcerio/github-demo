@@ -1,6 +1,5 @@
 package com.chipcerio.shopback.config
 
-import com.chipcerio.shopback.BuildConfig
 import com.chipcerio.shopback.api.ApiService
 import com.google.gson.GsonBuilder
 import retrofit2.Retrofit
@@ -12,7 +11,7 @@ object ApiServiceProvider {
         val gson = GsonBuilder().setLenient().create()
 
         val retrofit = Retrofit.Builder()
-            .baseUrl(BuildConfig.GITHUB_V3_API)
+            .baseUrl("https://api.github.com/")
             .addConverterFactory(GsonConverterFactory.create(gson))
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
             .build()

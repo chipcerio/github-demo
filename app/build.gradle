@@ -4,10 +4,6 @@ apply plugin: 'kotlin-android'
 
 apply plugin: 'kotlin-android-extensions'
 
-def envFile = rootProject.file("env_vars.properties")
-def envVars = new Properties()
-envVars.load(new FileInputStream(envFile))
-
 // https://blog.jetbrains.com/kotlin/2017/08/kotlin-1-1-4-is-out
 androidExtensions {
     experimental = true
@@ -29,10 +25,6 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
-    }
-
-    buildTypes.each {
-        it.buildConfigField('String', 'GITHUB_V3_API', envVars['GITHUB_V3_API'])
     }
 
     compileOptions {

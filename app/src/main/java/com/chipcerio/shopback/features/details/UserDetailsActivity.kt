@@ -3,6 +3,7 @@ package com.chipcerio.shopback.features.details
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
+import android.view.View
 import com.chipcerio.shopback.GithubApp
 import com.chipcerio.shopback.R
 import com.chipcerio.shopback.data.dto.User
@@ -61,6 +62,11 @@ class UserDetailsActivity : AppCompatActivity() {
         login.text = user.login
         location.text = user.location
         blog.text = user.blog
+        if (user.site_admin) {
+            staff.visibility = View.VISIBLE
+        } else {
+            staff.visibility = View.GONE
+        }
         clear.setOnClickListener {
             this@UserDetailsActivity.finish()
         }

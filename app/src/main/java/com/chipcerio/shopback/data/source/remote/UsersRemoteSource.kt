@@ -1,5 +1,6 @@
 package com.chipcerio.shopback.data.source.remote
 
+import android.util.Log
 import com.chipcerio.shopback.api.ApiService
 import com.chipcerio.shopback.api.GitHubResponse
 import com.chipcerio.shopback.api.PageLinks
@@ -19,6 +20,8 @@ class UsersRemoteSource(private val api: ApiService) : UsersSource {
         } else {
             "https://api.github.com/users?per_page=20&since=0"
         }
+
+        Log.d(TAG, "pageUrl: $page")
 
         return Observable.create<PageResponse> {
             val res = api.getUsersSync(page).execute()

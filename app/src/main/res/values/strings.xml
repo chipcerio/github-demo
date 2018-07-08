@@ -4,4 +4,6 @@
     <string name="place">place</string>
     <string name="person">person</string>
     <string name="clear">clear</string>
+    <string name="users">Users</string>
+    <string name="staff">Staff</string>
 </resources>
