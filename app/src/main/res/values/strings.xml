@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Github Users</string>
+    <string name="insert_link">insert link</string>
+    <string name="place">place</string>
+    <string name="person">person</string>
+    <string name="clear">clear</string>
 </resources>

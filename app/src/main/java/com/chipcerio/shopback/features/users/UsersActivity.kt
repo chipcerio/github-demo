@@ -1,5 +1,6 @@
 package com.chipcerio.shopback.features.users
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
@@ -9,6 +10,7 @@ import com.chipcerio.shopback.GithubApp
 import com.chipcerio.shopback.R
 import com.chipcerio.shopback.data.dto.User
 import com.chipcerio.shopback.di.UsersInjection
+import com.chipcerio.shopback.features.details.UserDetailsActivity
 import com.chipcerio.shopback.features.users.UsersAdapter.OnEndReachedListener
 import com.chipcerio.shopback.features.users.UsersAdapter.OnUserSelectedListener
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -78,7 +80,9 @@ class UsersActivity : AppCompatActivity(), OnUserSelectedListener, OnEndReachedL
     }
 
     override fun onUserSelected(user: User) {
-        Toast.makeText(this, user.login, Toast.LENGTH_SHORT).show()
+        val intent = Intent(this, UserDetailsActivity::class.java)
+        intent.putExtra(UserDetailsActivity.EXTRA_LOGIN, user.login)
+        startActivity(intent)
     }
 
     override fun onEndReached() {
