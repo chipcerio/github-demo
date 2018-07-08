@@ -9,6 +9,8 @@ import com.chipcerio.shopback.GithubApp
 import com.chipcerio.shopback.R
 import com.chipcerio.shopback.data.dto.User
 import com.chipcerio.shopback.di.UsersInjection
+import com.chipcerio.shopback.features.users.UsersAdapter.OnEndReachedListener
+import com.chipcerio.shopback.features.users.UsersAdapter.OnUserSelectedListener
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
@@ -16,7 +18,7 @@ import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.activity_users.*
 import kotlinx.android.synthetic.main.toolbar.*
 
-class UsersActivity : AppCompatActivity(), UsersAdapter.OnUserSelectedListener {
+class UsersActivity : AppCompatActivity(), OnUserSelectedListener, OnEndReachedListener {
 
     companion object {
         const val TAG = "UsersActivity"
@@ -41,7 +43,7 @@ class UsersActivity : AppCompatActivity(), UsersAdapter.OnUserSelectedListener {
         val api = app.getApiService()
         viewModel = UsersViewModel(UsersInjection.providesUsersSource(api))
 
-        adapter = UsersAdapter(mutableListOf(), this)
+        adapter = UsersAdapter(mutableListOf(), this, this)
 
         recyclerView.apply {
             layoutManager = LinearLayoutManager(this@UsersActivity)
@@ -70,10 +72,6 @@ class UsersActivity : AppCompatActivity(), UsersAdapter.OnUserSelectedListener {
         paginate.onNext(pageUrl)
     }
 
-    override fun onStart() {
-        super.onStart()
-    }
-
     override fun onStop() {
         super.onStop()
         disposables.clear()
@@ -81,6 +79,11 @@ class UsersActivity : AppCompatActivity(), UsersAdapter.OnUserSelectedListener {
 
     override fun onUserSelected(user: User) {
         Toast.makeText(this, user.login, Toast.LENGTH_SHORT).show()
+    }
+
+    override fun onEndReached() {
+        Toast.makeText(this, "Fetching users...", Toast.LENGTH_SHORT).show()
+        paginate.onNext(pageUrl)
     }
 
     private fun setGithubUsers(users: List<User>) {

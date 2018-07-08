@@ -28,6 +28,7 @@ class UsersRemoteSource(private val api: ApiService) : UsersSource {
                     val pageLinks = PageLinks(githubResponse)
                     val pageResponse = PageResponse(pageLinks.next, users)
                     it.onNext(pageResponse)
+                    it.onComplete()
                 }
             } else it.onError(Throwable("Error"))
         }

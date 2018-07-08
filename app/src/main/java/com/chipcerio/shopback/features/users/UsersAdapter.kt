@@ -12,7 +12,8 @@ import kotlinx.android.synthetic.main.item_user.*
 
 class UsersAdapter(
     private val users: MutableList<User>,
-    private val listener: OnUserSelectedListener
+    private val onUserSelectedListener: OnUserSelectedListener,
+    private val onEndReachedListener: OnEndReachedListener
 ) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
@@ -23,6 +24,9 @@ class UsersAdapter(
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         (holder as UsersVH).bind(users[position], position)
+        if (position == users.lastIndex) {
+            onEndReachedListener.onEndReached()
+        }
     }
 
     override fun getItemCount(): Int = users.size
@@ -39,7 +43,7 @@ class UsersAdapter(
             github_user.text = user.login
             Picasso.get().load(user.avatar_url).into(profile_image)
             containerView.setOnClickListener {
-                listener.onUserSelected(user)
+                onUserSelectedListener.onUserSelected(user)
             }
             if (position == 0) {
                 sectionView.visibility = View.VISIBLE
@@ -51,5 +55,9 @@ class UsersAdapter(
 
     interface OnUserSelectedListener {
         fun onUserSelected(user: User)
+    }
+
+    interface OnEndReachedListener {
+        fun onEndReached()
     }
 }
