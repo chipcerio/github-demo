@@ -4,5 +4,5 @@ import com.chipcerio.shopback.data.dto.User
 import io.reactivex.Observable
 
 interface UsersSource {
-    fun getUsers(): Observable<List<User>>
+    fun getUsers(pageUrl: String): Observable<List<User>>
 }

@@ -28,9 +28,9 @@ class UsersActivity : AppCompatActivity(), UsersAdapter.OnUserSelectedListener {
 
     private lateinit var adapter: UsersAdapter
 
-    private val paginate = PublishSubject.create<Int>()
+    private val paginate = PublishSubject.create<String>()
 
-    private var page = 1
+    private var pageUrl = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,7 +40,6 @@ class UsersActivity : AppCompatActivity(), UsersAdapter.OnUserSelectedListener {
         val app = application as GithubApp
         val api = app.getApiService()
         viewModel = UsersViewModel(UsersInjection.providesUsersSource(api))
-        disposables = CompositeDisposable()
 
         adapter = UsersAdapter(mutableListOf(), this)
 
@@ -48,19 +47,27 @@ class UsersActivity : AppCompatActivity(), UsersAdapter.OnUserSelectedListener {
             layoutManager = LinearLayoutManager(this@UsersActivity)
             adapter = this@UsersActivity.adapter
         }
-    }
 
-    override fun onStart() {
-        super.onStart()
+        disposables = CompositeDisposable()
+
         disposables.add(
-            viewModel.getUsers()
-                .subscribeOn(Schedulers.io())
+            paginate.observeOn(Schedulers.io())
+                .concatMap {
+                    viewModel.getUsers("")
+                }
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
                     setGithubUsers(it)
                 }, {
                     Log.e(TAG, "Error:", it)
-                }))
+                })
+        )
+
+        paginate.onNext(pageUrl)
+    }
+
+    override fun onStart() {
+        super.onStart()
     }
 
     override fun onStop() {

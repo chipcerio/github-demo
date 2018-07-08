@@ -6,7 +6,7 @@ import io.reactivex.Observable
 
 class UsersViewModel(private val usersSource: UsersSource) {
 
-    fun getUsers(): Observable<List<User>> {
-        return usersSource.getUsers()
+    fun getUsers(pageUrl: String): Observable<List<User>> {
+        return usersSource.getUsers(pageUrl)
     }
 }
