@@ -12,6 +12,7 @@ import com.chipcerio.shopback.di.UsersInjection
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
+import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.activity_users.*
 import kotlinx.android.synthetic.main.toolbar.*
 
@@ -26,6 +27,10 @@ class UsersActivity : AppCompatActivity(), UsersAdapter.OnUserSelectedListener {
     private lateinit var disposables: CompositeDisposable
 
     private lateinit var adapter: UsersAdapter
+
+    private val paginate = PublishSubject.create<Int>()
+
+    private var page = 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
